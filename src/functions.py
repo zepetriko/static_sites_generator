@@ -1,5 +1,8 @@
+
 from textnode import TextType, TextNode
 import re
+
+
 
 def split_nodes_code(old_nodes):
     final_list = []
@@ -126,3 +129,4 @@ def text_to_textnodes(text):
     node4 = split_nodes_image(node3)
     node5 = split_nodes_link(node4)
     return node5
+
