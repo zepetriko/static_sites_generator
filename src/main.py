@@ -1,37 +1,31 @@
-from textnode import TextNode, TextType
-from htmlnode import HTMLNode
-from functions import split_nodes_bold, split_nodes_italic, split_nodes_code, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks
+import os
+import shutil
+
+def copy_static_files(source_dir, dest_dir):
+    if os.path.exists(dest_dir):
+        shutil.rmtree(dest_dir)
+
+    os.mkdir(dest_dir)
+
+    copy_directory_contents(source_dir, dest_dir)
+
+def copy_directory_contents(src_dir, dst_dir):
+    for item in os.listdir(src_dir):
+        src_item_path = os.path.join(src_dir, item)
+        dst_item_path = os.path.join(dst_dir, item)
+
+        if os.path.isfile(src_item_path):
+            print(f"Copying file: {src_item_path} to {dst_item_path}")
+            shutil.copy(src_item_path, dst_item_path)
+        else:
+            print(f"Creating directory: {dst_item_path}")
+            os.mkdir(dst_item_path)
+
+            copy_directory_contents(src_item_path, dst_item_path)
 
 def main():
-    # test = TextNode("test text", TextType.LINK, "https://test.com")
-    # test1 = HTMLNode(tag="<p>", value="valueee", children=[], props={"href": "https://www.google.com", "target": "_blank",})
-    # node = TextNode("This is **text** with an _italic_ word and a ", TextType.NORMAL_TEXT, None)
-    # new_nodes = split_nodes_bold([node])
-    
-    # node1 = TextNode(
-    #     "",
-    #     TextType.NORMAL_TEXT,
-    # )
-    # new_nodes1 = split_nodes_image([node1])
-    
-    # node2 = TextNode(
-    # "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
-    # TextType.NORMAL_TEXT,
-    # )
-    # new_nodes2 = split_nodes_link([node2])
+    copy_static_files("static", "public")
+    print("Static files copied sucessfully!")
 
-    # text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-    # final_text = text_to_textnodes(text)
-    md = """
-    This is **bolded** paragraph
-
-    This is another paragraph with _italic_ text and `code` here
-    This is the same paragraph on a new line
-
-    - This is a list
-    - with items
-    """
-    blocks = markdown_to_blocks(md)
-    print(blocks)
-
-main()
+if __name__ == "__main__":
+    main()
