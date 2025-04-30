@@ -83,9 +83,12 @@ def block_to_html_node(block):
 
 def text_to_children(text):
     children = []
+    print(f"Processing text: {text}")
     text_nodes = text_to_textnodes(text)
-
+    print(f"text_nodes type: {type(text_nodes)}")
+    print(f"text_nodes value: {text_nodes}")
     for node in text_nodes:
+
         html_node = text_node_to_html_node(node)
         children.append(html_node)
 
@@ -148,3 +151,4 @@ def quote_to_html_node(block):
     content = " ".join(new_lines)
     children = text_to_children(content)
     return ParentNode("blockquote", children)
+

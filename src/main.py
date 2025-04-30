@@ -1,5 +1,6 @@
 import os
 import shutil
+from functions import generate_pages_recursive
 
 def copy_static_files(source_dir, dest_dir):
     if os.path.exists(dest_dir):
@@ -25,7 +26,9 @@ def copy_directory_contents(src_dir, dst_dir):
 
 def main():
     copy_static_files("static", "public")
-    print("Static files copied sucessfully!")
+    print("Static files copied successfully!")
+    generate_pages_recursive("content", "template.html", "public")
+    print("Page Generated")
 
 if __name__ == "__main__":
     main()
