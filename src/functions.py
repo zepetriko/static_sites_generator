@@ -138,7 +138,7 @@ def split_nodes_link(old_nodes):
 
             if text_remaining:
                 final_list.append(TextNode(text_remaining, TextType.NORMAL_TEXT))
-                
+
     return final_list
 
 def text_to_textnodes(text):
@@ -160,7 +160,7 @@ def extract_title(markdown):
         
     raise Exception("No h1 header found in markdown")
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     from markdown_blocks import markdown_to_html_node
 
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -176,15 +176,20 @@ def generate_page(from_path, template_path, dest_path):
 
     title = extract_title(markdown_content)
 
+    if not basepath.endswith("/"):
+        basepath = basepath + "/"
+
     final_html = template_content.replace('{{ Title }}', title)
     final_html = final_html.replace('{{ Content }}', html_content)
+    final_html = final_html.replace('href="/', f'href="{basepath}')
+    final_html = final_html.replace('src="/', f'src="{basepath}')
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
     with open(dest_path, 'w') as f:
         f.write(final_html)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     
     dir_entries = os.listdir(dir_path_content)
 
@@ -196,6 +201,6 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         if os.path.isfile(entry_path) and entry_path.endswith('.md'):
             os.makedirs(os.path.dirname(public_path), exist_ok=True)
 
-            generate_page(entry_path, template_path, public_path)
+            generate_page(entry_path, template_path, public_path, basepath)
         elif os.path.isdir(entry_path):
-            generate_pages_recursive(entry_path, template_path, os.path.join(dest_dir_path, entry))
+            generate_pages_recursive(entry_path, template_path, os.path.join(dest_dir_path, entry), basepath)

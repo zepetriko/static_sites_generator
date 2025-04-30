@@ -1,6 +1,7 @@
 import os
 import shutil
 from functions import generate_pages_recursive
+import sys 
 
 def copy_static_files(source_dir, dest_dir):
     if os.path.exists(dest_dir):
@@ -25,9 +26,14 @@ def copy_directory_contents(src_dir, dst_dir):
             copy_directory_contents(src_item_path, dst_item_path)
 
 def main():
-    copy_static_files("static", "public")
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+    else:
+        basepath = '/'
+
+    copy_static_files("static", "docs")
     print("Static files copied successfully!")
-    generate_pages_recursive("content", "template.html", "public")
+    generate_pages_recursive("content", "template.html", "docs", basepath)
     print("Page Generated")
 
 if __name__ == "__main__":
